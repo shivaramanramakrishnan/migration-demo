@@ -1,0 +1,33 @@
+services:
+  web:
+    build: ./app
+    container_name: demo_web
+    working_dir: /app
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_USER=appuser
+      - DB_PASS=apppass
+      - DB_NAME=appdb
+      - UPLOAD_DIR=/app/uploads
+    volumes:
+      - ./uploads:/app/uploads
+
+  db:
+    image: mysql:8.0
+    container_name: demo_db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: appdb
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppass
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
